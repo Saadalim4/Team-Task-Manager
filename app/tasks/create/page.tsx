@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { supabase } from "@/src/lib/supabaseClient";
 import { useAuth } from "@/components/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
@@ -17,7 +17,7 @@ interface User {
   name: string;
 }
 
-export default function CreateTaskPage() {
+function CreateTaskForm() {
   const { userData } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -221,5 +221,13 @@ export default function CreateTaskPage() {
         </div>
       </div>
     </ProtectedRoute>
+  );
+}
+
+export default function CreateTaskPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="text-xl">Loading...</div></div>}>
+      <CreateTaskForm />
+    </Suspense>
   );
 }
