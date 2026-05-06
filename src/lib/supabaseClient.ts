@@ -16,5 +16,10 @@ export const getSupabaseClient = () => {
   return supabaseInstance
 }
 
-// Export for backwards compatibility
-export const supabase = getSupabaseClient()
+// Lazy proxy that only creates client when actually accessed
+export const supabase = new Proxy({} as ReturnType<typeof createClient>, {
+  get(target, prop) {
+    const client = getSupabaseClient()
+    return client[prop as keyof typeof client]
+  }
+})
