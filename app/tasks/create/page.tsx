@@ -64,16 +64,14 @@ function CreateTaskForm() {
     setLoading(true);
 
     try {
-      const { error } = await supabase.from("tasks").insert([
-        {
-          title,
-          description,
-          project_id: selectedProject,
-          assigned_to: selectedAssignee || null,
-          status,
-          due_date: dueDate || null,
-        },
-      ]);
+      const { error } = await supabase.from("tasks").insert({
+        title,
+        description,
+        project_id: selectedProject,
+        assigned_to: selectedAssignee || null,
+        status,
+        due_date: dueDate || null,
+      } as unknown as never);
 
       if (error) {
         toast.error("Error creating task: " + error.message);

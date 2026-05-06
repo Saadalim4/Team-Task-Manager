@@ -102,7 +102,7 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
         .from("users")
         .select("id")
         .eq("email", memberEmail)
-        .single();
+        .single() as { data: { id: string } | null; error: any };
 
       if (userError || !userData) {
         toast.error("User not found with this email");
@@ -110,13 +110,11 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
       }
 
       // Add member to project
-      const { error: addError } = await supabase.from("project_members").insert([
-        {
-          project_id: params.id,
-          user_id: userData.id,
-          role: "member",
-        },
-      ]);
+      const { error: addError } = await supabase.from("project_members").insert({
+        project_id: params.id,
+        user_id: userData.id,
+        role: "member",
+      } as unknown as never);
 
       if (addError) {
         toast.error("Error adding member: " + addError.message);

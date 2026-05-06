@@ -38,6 +38,8 @@ export default function ProfilePage() {
   }, [userData]);
 
   const fetchAssignedTasks = async () => {
+    if (!user?.id) return;
+
     try {
       const { data, error } = await supabase
         .from("tasks")
@@ -47,7 +49,7 @@ export default function ProfilePage() {
             name
           )
         `)
-        .eq("assigned_to", user?.id)
+        .eq("assigned_to", user.id)
         .order("created_at", { ascending: false });
 
       if (error) {
@@ -64,11 +66,13 @@ export default function ProfilePage() {
 
   const handleUpdateProfilePicture = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!user?.id) return;
+
     try {
       const { error } = await supabase
         .from("users")
-        .update({ profile_picture: profilePicture })
-        .eq("id", user?.id);
+        .update({ profile_picture: profilePicture } as unknown as never)
+        .eq("id", user.id);
 
       if (error) {
         toast.error("Error updating profile picture: " + error.message);
@@ -119,10 +123,15 @@ export default function ProfilePage() {
 
       const publicUrl = data.publicUrl;
 
+      if (!user?.id) {
+        toast.error("User not authenticated");
+        return;
+      }
+
       const { error: updateError } = await supabase
         .from("users")
-        .update({ profile_picture: publicUrl })
-        .eq("id", user?.id);
+        .update({ profile_picture: publicUrl } as unknown as never)
+        .eq("id", user.id);
 
       if (updateError) {
         toast.error("Error updating profile: " + updateError.message);

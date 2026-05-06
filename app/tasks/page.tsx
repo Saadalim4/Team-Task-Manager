@@ -68,7 +68,7 @@ export default function TasksPage() {
     try {
       const { error } = await supabase
         .from("tasks")
-        .update({ status: newStatus })
+        .update({ status: newStatus } as unknown as never)
         .eq("id", taskId);
 
       if (error) {

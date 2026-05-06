@@ -19,13 +19,11 @@ export default function CreateProjectPage() {
     setLoading(true);
 
     try {
-      const { error } = await supabase.from("projects").insert([
-        {
-          name,
-          description,
-          created_by: userData?.id,
-        },
-      ]);
+      const { error } = await supabase.from("projects").insert({
+        name,
+        description,
+        created_by: userData?.id,
+      } as unknown as never);
 
       if (error) {
         toast.error("Error creating project: " + error.message);

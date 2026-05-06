@@ -78,14 +78,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
             const { error: insertError } = await supabase
               .from("users")
-              .insert([
-                {
-                  id: userId,
-                  name: authUser.user.user_metadata?.name || authUser.user.email?.split("@")[0],
-                  email: authUser.user.email,
-                  role,
-                },
-              ]);
+              .insert({
+                id: userId,
+                name: authUser.user.user_metadata?.name || authUser.user.email?.split("@")[0],
+                email: authUser.user.email,
+                role,
+              } as unknown as never);
 
             if (insertError) {
               console.error("Error creating user data:", insertError);

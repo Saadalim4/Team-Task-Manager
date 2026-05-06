@@ -48,14 +48,12 @@ export default function AuthForm({ initialMode = "login" }: AuthFormProps) {
         // Insert additional user data into users table
         const { error: dbError } = await supabase
           .from("users")
-          .insert([
-            {
-              id: authData.user.id,
-              name,
-              phone: phone || null,
-              role,
-            },
-          ]);
+          .insert({
+            id: authData.user.id,
+            name,
+            phone: phone || null,
+            role,
+          } as unknown as never);
 
         if (dbError) {
           toast.error("Error saving user data: " + dbError.message);

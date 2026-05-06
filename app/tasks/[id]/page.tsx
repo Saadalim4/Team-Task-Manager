@@ -71,11 +71,12 @@ export default function TaskDetailPage({ params }: { params: { id: string } }) {
         router.push("/tasks");
         return;
       }
+      const taskData = data as { status: string; due_date: string; assigned_to: string };
       setTask(data);
       setEditedTask({
-        status: data.status,
-        due_date: data.due_date ? data.due_date.split("T")[0] : "",
-        assigned_to: data.assigned_to || "",
+        status: taskData.status,
+        due_date: taskData.due_date ? taskData.due_date.split("T")[0] : "",
+        assigned_to: taskData.assigned_to || "",
       });
     } catch (error) {
       console.error("Error fetching task details:", error);
@@ -101,7 +102,7 @@ export default function TaskDetailPage({ params }: { params: { id: string } }) {
           status: editedTask.status,
           due_date: editedTask.due_date || null,
           assigned_to: editedTask.assigned_to || null,
-        })
+        } as unknown as never)
         .eq("id", params.id);
 
       if (error) {
